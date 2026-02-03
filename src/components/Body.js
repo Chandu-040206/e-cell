@@ -7,8 +7,9 @@ import { RouterProvider } from 'react-router-dom'
 import Header from './Header'
 import Gallery from './Gallery'
 import Footer from './Footer'
-import JoinMember from './JoinMember'
+import Register from './Register'
 import ShareIdea from './ShareIdea'
+import AdminLogin from './AdminLogin'
 
 const AppLayout = () => {
     return (
@@ -34,7 +35,8 @@ const Body = () => {
                 { path: "team", element: <Team /> },
                 { path: "events", element: <Events /> },
                 { path: "gallery", element: <Gallery /> },
-                { path: "join/member", element: <JoinMember /> },
+                { path: "join/register", element: <Register /> },
+                { path: "join/login", element: <AdminLogin /> },
                 { path: "join/idea", element: <ShareIdea /> },
             ],
         },

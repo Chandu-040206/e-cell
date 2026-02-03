@@ -88,15 +88,22 @@ const Header = () => {
             <div className="absolute right-0 mt-4 w-40 bg-white rounded-2xl shadow-xl shadow-slate-900/10 border border-slate-200 overflow-hidden opacity-0 invisible translate-y-3 scale-95 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 transition-all duration-200 ease-out z-50">
 
               <Link
-                to="/join/member"
+                to="/join/register"
                 className="group/item relative block px-5 py-4 text-sm font-medium text-black hover:bg-slate-50 transition"
               >
-                Join as Member
+                Register
                 <span className="absolute left-0 top-0 h-full w-1 bg-orange-500 opacity-0 group-hover/item:opacity-100 transition" />
               </Link>
 
               <div className="h-px bg-slate-200" />
 
+              <Link
+                to="/join/login"
+                className="group/item relative block px-5 py-4 text-sm font-medium text-black hover:bg-slate-50 transition"
+              >
+                Login
+                <span className="absolute left-0 top-0 h-full w-1 bg-orange-500 opacity-0 group-hover/item:opacity-100 transition" />
+              </Link>
               <Link
                 to="/join/idea"
                 className="group/item relative block px-5 py-4 text-sm font-medium text-black hover:bg-slate-50 transition"

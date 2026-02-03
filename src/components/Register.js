@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const JoinMember = () => {
+const Register = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -185,4 +185,4 @@ const JoinMember = () => {
   );
 };
 
-export default JoinMember;
+export default Register;
