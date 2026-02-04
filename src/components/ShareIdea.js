@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const ShareIdea = () => {
+export default function ShareIdea() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,197 +20,130 @@ const ShareIdea = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData); // connect backend later
+    console.log(formData);
     alert("Your idea has been submitted successfully!");
   };
 
   return (
-    <div className="pt-7 pb-20 bg-[#f9fafb] min-h-screen">
-      <div className="max-w-xl mx-auto px-6">
+    <section className="bg-slate-50 min-h-screen pt-10 pb-20">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6">
 
         {/* Heading */}
-        <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold text-[#111]">
+        <div className="text-center mb-10 sm:mb-14">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900">
             Share Your Startup Idea
           </h1>
-          <p className="text-gray-600 mt-2">
+          <div className="w-12 h-1 bg-blue-600 rounded-full mx-auto mt-3 mb-4" />
+          <p className="text-slate-600 text-sm sm:text-base">
             Have an idea? Let us help you validate and build it.
           </p>
         </div>
 
-        {/* Form Card */}
+        {/* Form */}
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-2xl shadow-lg p-8"
+          className="bg-white rounded-2xl shadow-lg border border-slate-200
+                     p-6 sm:p-8 md:p-10 space-y-5"
         >
 
-          {/* Name */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Full Name</label>
-            <input
-              type="text"
-              name="name"
-              required
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Your full name"
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          {/* Basic Info */}
+          <div className="grid sm:grid-cols-2 gap-5">
+            <Input label="Full Name" name="name" required onChange={handleChange} />
+            <Input label="Email" name="email" type="email" required onChange={handleChange} />
           </div>
 
-          {/* Email */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Email</label>
-            <input
-              type="email"
-              name="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="example@email.com"
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          <div className="grid sm:grid-cols-2 gap-5">
+            <Input label="Phone Number" name="phone" required onChange={handleChange} />
+            <Input label="Idea Title" name="ideaTitle" required onChange={handleChange} />
           </div>
 
-          {/* Phone */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Phone Number</label>
-            <input
-              type="tel"
-              name="phone"
-              required
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder="10-digit mobile number"
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          <Textarea label="Problem Statement" name="problem" rows={3} required onChange={handleChange} />
+          <Textarea label="Proposed Solution" name="solution" rows={3} required onChange={handleChange} />
 
-          {/* Idea Title */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
-              Idea Title
-            </label>
-            <input
-              type="text"
-              name="ideaTitle"
-              required
-              value={formData.ideaTitle}
-              onChange={handleChange}
-              placeholder="Short and clear title"
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Problem */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
-              Problem Statement
-            </label>
-            <textarea
-              name="problem"
-              rows="3"
-              required
-              value={formData.problem}
-              onChange={handleChange}
-              placeholder="What problem are you solving?"
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Solution */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
-              Proposed Solution
-            </label>
-            <textarea
-              name="solution"
-              rows="3"
-              required
-              value={formData.solution}
-              onChange={handleChange}
-              placeholder="Describe your solution"
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Market */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
-              Target Market
-            </label>
-            <input
-              type="text"
-              name="market"
-              value={formData.market}
-              onChange={handleChange}
-              placeholder="Students, SMEs, Rural India, etc."
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Stage */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
-              Current Stage
-            </label>
-            <select
+          <div className="grid sm:grid-cols-2 gap-5">
+            <Input label="Target Market" name="market" onChange={handleChange} />
+            <Select
+              label="Current Stage"
               name="stage"
               required
-              value={formData.stage}
+              options={[
+                "Idea Stage",
+                "Prototype Built",
+                "Early Users",
+                "Revenue Generating",
+              ]}
               onChange={handleChange}
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Select stage</option>
-              <option>Idea Stage</option>
-              <option>Prototype Built</option>
-              <option>Early Users</option>
-              <option>Revenue Generating</option>
-            </select>
-          </div>
-
-          {/* Team */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
-              Team Members (optional)
-            </label>
-            <input
-              type="text"
-              name="team"
-              value={formData.team}
-              onChange={handleChange}
-              placeholder="Names or count"
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
-          {/* Link */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium mb-1">
-              Pitch Deck / Drive Link (optional)
-            </label>
-            <input
-              type="url"
-              name="link"
-              value={formData.link}
-              onChange={handleChange}
-              placeholder="https://drive.google.com/..."
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          <div className="grid sm:grid-cols-2 gap-5">
+            <Input label="Team Members (optional)" name="team" onChange={handleChange} />
+            <Input label="Pitch Deck / Drive Link" name="link" type="url" onChange={handleChange} />
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-full font-semibold
-                       hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 text-white py-3 rounded-full
+                       font-semibold text-sm sm:text-base
+                       hover:bg-blue-700 active:scale-[0.98] transition"
           >
             Submit Idea
           </button>
         </form>
       </div>
+    </section>
+  );
+}
+
+/* ===== Reusable Inputs ===== */
+
+function Input({ label, type = "text", ...props }) {
+  return (
+    <div>
+      <label className="block text-xs sm:text-sm font-medium mb-1 text-slate-700">
+        {label}
+      </label>
+      <input
+        type={type}
+        {...props}
+        className="w-full rounded-lg border border-slate-300 px-4 py-2.5
+                   text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
     </div>
   );
-};
+}
 
-export default ShareIdea;
+function Textarea({ label, ...props }) {
+  return (
+    <div>
+      <label className="block text-xs sm:text-sm font-medium mb-1 text-slate-700">
+        {label}
+      </label>
+      <textarea
+        {...props}
+        className="w-full rounded-lg border border-slate-300 px-4 py-2.5
+                   text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+  );
+}
+
+function Select({ label, options, ...props }) {
+  return (
+    <div>
+      <label className="block text-xs sm:text-sm font-medium mb-1 text-slate-700">
+        {label}
+      </label>
+      <select
+        {...props}
+        className="w-full rounded-lg border border-slate-300 px-4 py-2.5
+                   text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="">Select</option>
+        {options.map((opt, i) => (
+          <option key={i}>{opt}</option>
+        ))}
+      </select>
+    </div>
+  );
+}

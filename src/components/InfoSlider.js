@@ -1,13 +1,44 @@
 import React, { useMemo, useState, useEffect } from "react";
+import image1 from "../utils/images/1.jpeg";
+import image2 from "../utils/images/5.jpeg";
+import image3 from "../utils/images/10.jpeg";
 
-const AUTO_DELAY = 4000; // 4 seconds
+const AUTO_DELAY = 4000;
+const SWIPE_THRESHOLD = 50;
 
-const InfoSlider = ({ slides = [], className = "" }) => {
-  const safeSlides = useMemo(() => slides.filter(Boolean), [slides]);
+const InfoSlider = ({ className = "" }) => {
+  const slides = useMemo(
+    () => [
+      {
+        heading: "Empowering Innovation Through Collaboration",
+        text: `Enable seamless collaboration among students, faculty, professionals, entrepreneurs, mentors and venture capitalists to incubate innovative ideas.`,
+        image: image1,
+        reverse: false,
+      },
+      {
+        heading: "Student-driven, Impact-focused",
+        text: `E-Cell RGUKT Ongole is a student-driven platform dedicated to nurturing innovation, leadership, and entrepreneurial skills among young minds.`,
+        image: image2,
+        reverse: true,
+      },
+      {
+        heading: "Turning Ideas into Ventures",
+        text: `We empower students with skills, mentorship, and opportunities needed to transform ideas into impactful ventures.`,
+        image: image3,
+        reverse: false,
+      },
+    ],
+    []
+  );
+
   const [active, setActive] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  const total = safeSlides.length;
+  // Swipe state
+  const [touchStartX, setTouchStartX] = useState(null);
+  const [touchEndX, setTouchEndX] = useState(null);
+
+  const total = slides.length;
 
   const goPrev = () =>
     setActive((p) => (p === 0 ? total - 1 : p - 1));
@@ -15,52 +46,69 @@ const InfoSlider = ({ slides = [], className = "" }) => {
   const goNext = () =>
     setActive((p) => (p === total - 1 ? 0 : p + 1));
 
-  // 🔁 Auto slide (ALWAYS called)
+  // Auto slide
   useEffect(() => {
-    if (!total || isPaused) return;
+    if (isPaused) return;
 
-    const interval = setInterval(() => {
-      setActive((p) => (p === total - 1 ? 0 : p + 1));
-    }, AUTO_DELAY);
-
+    const interval = setInterval(goNext, AUTO_DELAY);
     return () => clearInterval(interval);
-  }, [isPaused, total]);
+  }, [isPaused]);
 
-  // ⛔ render guard AFTER hooks
-  if (!total) return null;
+  // Swipe handlers
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
 
-  const current = safeSlides[active];
+  const handleTouchMove = (e) => {
+    setTouchEndX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX || !touchEndX) return;
+
+    const distance = touchStartX - touchEndX;
+
+    if (distance > SWIPE_THRESHOLD) {
+      goNext(); // swipe left
+    } else if (distance < -SWIPE_THRESHOLD) {
+      goPrev(); // swipe right
+    }
+
+    setTouchStartX(null);
+    setTouchEndX(null);
+  };
 
   return (
-    <section className={`bg-white py-6 ${className}`}>
-      <div className="mx-auto max-w-6xl px-6">
-        {/* Title */}
-        <div className="text-center">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-[#0B2E5F]">
-            {current.title}
-          </h2>
-        </div>
+    <section className={`bg-gradient-to-b from-white to-slate-50 py-12 ${className}`}>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
 
-        {/* Slider */}
         <div
-          className="relative mt-3 rounded-3xl border border-[#0B2E5F]/10 bg-white shadow-sm overflow-hidden"
+          className="relative rounded-3xl bg-white shadow-xl border border-slate-200 overflow-hidden"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
-          {/* Prev */}
+
+          {/* Prev (Hidden on Mobile) */}
           <button
             onClick={goPrev}
-            aria-label="Previous slide"
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 h-10 w-10 md:h-12 md:w-12 rounded-full bg-white border border-[#0B2E5F]/15 shadow flex items-center justify-center text-[#0B2E5F] text-2xl hover:bg-white"
+            className="hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 z-10
+            h-11 w-11 rounded-full bg-white shadow-md border
+            items-center justify-center text-[#0B2E5F] text-xl
+            hover:scale-110 transition"
           >
             ‹
           </button>
 
-          {/* Next */}
+          {/* Next (Hidden on Mobile) */}
           <button
             onClick={goNext}
-            aria-label="Next slide"
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 h-10 w-10 md:h-12 md:w-12 rounded-full bg-white border border-[#0B2E5F]/15 shadow flex items-center justify-center text-[#0B2E5F] text-2xl hover:bg-white"
+            className="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 z-10
+            h-11 w-11 rounded-full bg-white shadow-md border
+            items-center justify-center text-[#0B2E5F] text-xl
+            hover:scale-110 transition"
           >
             ›
           </button>
@@ -70,56 +118,58 @@ const InfoSlider = ({ slides = [], className = "" }) => {
             className="flex transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${active * 100}%)` }}
           >
-            {safeSlides.map((s, idx) => (
-              <div
-                key={idx}
-                className="min-w-full px-10 py-5 md:px-14 md:py-6"
-              >
+            {slides.map((s, idx) => (
+              <div key={idx} className="min-w-full p-6 md:p-10">
                 <div
-                  className={`grid gap-6 md:grid-cols-5 ${
+                  className={`grid gap-8 items-center md:grid-cols-2 ${
                     s.reverse ? "md:[&>div:first-child]:order-2" : ""
                   }`}
                 >
-                  {/* Image */}
-                  <div className="md:col-span-2 overflow-hidden rounded-2xl border border-[#0B2E5F]/10 shadow-md">
+
+                  <div className="overflow-hidden rounded-2xl shadow-lg">
                     <img
                       src={s.image}
-                      alt={s.title}
-                      className="h-[170px] md:h-[260px] w-full object-cover"
+                      alt={s.heading}
+                      className="
+                        w-full object-cover
+                        h-[180px]
+                        sm:h-[220px]
+                        md:h-[260px]
+                        lg:h-[280px]
+                        max-h-[300px]
+                      "
                     />
                   </div>
 
-                  {/* Text */}
-                  <div className="md:col-span-3 rounded-2xl border border-[#0B2E5F]/10 bg-[#0B2E5F]/[0.04] p-6 md:p-8">
-                    {s.heading && (
-                      <h3 className="text-xl md:text-2xl font-bold text-[#0B2E5F]">
-                        {s.heading}
-                      </h3>
-                    )}
-                    <p className="mt-4 text-base md:text-lg leading-8 text-slate-700">
+                  <div className="space-y-4">
+                    <h3 className="text-2xl md:text-3xl font-bold text-[#0B2E5F]">
+                      {s.heading}
+                    </h3>
+                    <p className="text-slate-600 leading-relaxed text-base md:text-lg">
                       {s.text}
                     </p>
                   </div>
+
                 </div>
               </div>
             ))}
           </div>
 
           {/* Dots */}
-          <div className="pb-5 flex justify-center gap-2">
-            {safeSlides.map((_, i) => (
+          <div className="pb-6 flex justify-center gap-3">
+            {slides.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setActive(i)}
-                aria-label={`Go to slide ${i + 1}`}
-                className={`h-2.5 rounded-full transition-all ${
+                className={`h-3 rounded-full transition-all ${
                   active === i
-                    ? "bg-[#0B2E5F] w-6"
-                    : "bg-[#0B2E5F]/25 w-2.5"
+                    ? "bg-[#0B2E5F] w-8"
+                    : "bg-slate-300 w-3 hover:bg-slate-400"
                 }`}
               />
             ))}
           </div>
+
         </div>
       </div>
     </section>

@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import sir from "../utils/images/sir.jpg";
 import mam from "../utils/images/mam.jpg";
+
+const AUTO_DELAY = 5000;
+const SWIPE_THRESHOLD = 50;
 
 const data = [
   {
@@ -19,7 +22,11 @@ const data = [
 
 export default function Testimonial() {
   const [index, setIndex] = useState(0);
-  const t = data[index];
+  const [isPaused, setIsPaused] = useState(false);
+
+  // swipe state
+  const [touchStartX, setTouchStartX] = useState(null);
+  const [touchEndX, setTouchEndX] = useState(null);
 
   const prev = () =>
     setIndex((i) => (i === 0 ? data.length - 1 : i - 1));
@@ -27,10 +34,39 @@ export default function Testimonial() {
   const next = () =>
     setIndex((i) => (i === data.length - 1 ? 0 : i + 1));
 
+  const t = data[index];
+
+  /* ---------------- AUTO SLIDE ---------------- */
+  useEffect(() => {
+    if (isPaused) return;
+
+    const interval = setInterval(next, AUTO_DELAY);
+    return () => clearInterval(interval);
+  }, [isPaused]);
+
+  /* ---------------- SWIPE ---------------- */
+  const handleTouchStart = (e) =>
+    setTouchStartX(e.targetTouches[0].clientX);
+
+  const handleTouchMove = (e) =>
+    setTouchEndX(e.targetTouches[0].clientX);
+
+  const handleTouchEnd = () => {
+    if (!touchStartX || !touchEndX) return;
+
+    const distance = touchStartX - touchEndX;
+
+    if (distance > SWIPE_THRESHOLD) next();
+    if (distance < -SWIPE_THRESHOLD) prev();
+
+    setTouchStartX(null);
+    setTouchEndX(null);
+  };
+
   return (
     <section className="bg-slate-50 pb-14 md:pb-16">
 
-      {/* Section Heading — same style as your other pages */}
+      {/* Heading */}
       <div className="text-center mb-10">
         <h2 className="text-3xl md:text-4xl font-bold text-blue-900">
           Testimonials
@@ -41,14 +77,22 @@ export default function Testimonial() {
       <div className="max-w-5xl mx-auto px-6 relative">
 
         {/* Card */}
-        <div className="
-          bg-gradient-to-r from-[#0B2E5F] via-[#4a76b4] to-[#0B2E5F]
-          rounded-3xl
-          px-8 md:px-12
-          py-10 md:py-12
-          text-center text-white
-          shadow-xl
-        ">
+        <div
+          className="
+            bg-gradient-to-r from-[#0B2E5F] via-[#4a76b4] to-[#0B2E5F]
+            rounded-3xl
+            px-8 md:px-12
+            py-10 md:py-12
+            text-center text-white
+            shadow-xl
+            transition-all duration-500
+          "
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
 
           {/* Avatar */}
           <img
@@ -73,14 +117,16 @@ export default function Testimonial() {
           </p>
         </div>
 
-        {/* Arrows */}
+        {/* Arrows (Hidden on Mobile) */}
         <button
           onClick={prev}
           className="
-            absolute left-0 md:-left-12 top-1/2 -translate-y-1/2
+            hidden md:flex
+            absolute left-0 md:-left-2 top-1/2 -translate-y-1/2
             w-10 h-10 rounded-full
             bg-white shadow-md
-            text-blue-900 font-bold text-lg
+            items-center justify-center
+            text-blue-900 font-bold text-2xl
             hover:bg-slate-100 transition
           "
         >
@@ -90,10 +136,12 @@ export default function Testimonial() {
         <button
           onClick={next}
           className="
-            absolute right-0 md:-right-12 top-1/2 -translate-y-1/2
+            hidden md:flex
+            absolute right-0 md:-right-2 top-1/2 -translate-y-1/2
             w-10 h-10 rounded-full
             bg-white shadow-md
-            text-blue-900 font-bold text-lg
+            items-center justify-center
+            text-blue-900 font-bold text-2xl
             hover:bg-slate-100 transition
           "
         >

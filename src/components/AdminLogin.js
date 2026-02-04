@@ -1,10 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
+  const [form, setForm] = useState({ email: "", password: "" });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -12,71 +11,77 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(form);
-    // later connect to backend auth
+
+    if (form.email === "venu@gmail.com" && form.password === "venu@9307") {
+      localStorage.setItem("isAdmin", "true");
+      navigate("/events");
+    } else {
+      alert("Invalid admin credentials");
+    }
   };
 
   return (
-    <div className="min-h-screen flex  justify-center bg-slate-50 px-4">
-      <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8">
-        
-        {/* Title */}
-        <h2 className="text-3xl font-bold text-center mb-2">
-          E-Cell Login
-        </h2>
-        <p className="text-gray-500 text-center mb-6">
-          Access your account
-        </p>
+    <section className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 p-6 sm:p-8">
+
+        {/* Heading */}
+        <div className="text-center mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">
+            E-Cell Admin Login
+          </h2>
+          <p className="text-slate-500 text-sm sm:text-base mt-1">
+            Access the admin dashboard
+          </p>
+        </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          
-          {/* Email */}
+
           <div>
-            <label className="block mb-1 font-medium">
+            <label className="block text-sm font-medium text-slate-700 mb-1">
               Email
             </label>
             <input
               type="email"
               name="email"
               required
-              value={form.email}
+              placeholder="admin@email.com"
               onChange={handleChange}
-              placeholder="Enter your email"
-              className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none"
+              className="w-full rounded-lg border border-slate-300 px-4 py-2.5
+                         text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
           </div>
 
-          {/* Password */}
           <div>
-            <label className="block mb-1 font-medium">
+            <label className="block text-sm font-medium text-slate-700 mb-1">
               Password
             </label>
             <input
               type="password"
               name="password"
               required
-              value={form.password}
-              onChange={handleChange}
               placeholder="Enter password"
-              className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none"
+              onChange={handleChange}
+              className="w-full rounded-lg border border-slate-300 px-4 py-2.5
+                         text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
           </div>
 
-          {/* Button */}
           <button
             type="submit"
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2.5 rounded-lg transition"
+            className="w-full bg-orange-500 text-white py-3 rounded-lg
+                       font-semibold text-sm sm:text-base
+                       hover:bg-orange-600 active:scale-[0.98] transition"
           >
             Login
           </button>
         </form>
 
-        {/* Optional small footer */}
-        <p className="text-center text-sm text-gray-500 mt-6">
-          Forgot password? 
+        {/* Footer */}
+        <p className="text-center text-xs sm:text-sm text-slate-500 mt-6 hover:text-orange-500 cursor-pointer">
+          Forgot password?
         </p>
       </div>
-    </div>
+    </section>
   );
 }

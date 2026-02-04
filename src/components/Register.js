@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Register = () => {
+export default function Register() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,171 +18,197 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData); // later connect backend
+    console.log(formData);
     alert("Application submitted successfully!");
   };
 
   return (
-    <div className="pt-7 pb-20 bg-[#f9fafb] min-h-screen">
-      <div className="max-w-xl mx-auto px-6">
+    <section className="bg-slate-50 min-h-screen pt-10 pb-20">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6">
 
-        {/* Heading */}
-        <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold text-[#111]">
+        {/* ===== Heading ===== */}
+        <div className="text-center mb-10 sm:mb-14">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900">
             Join E-Cell as a Member
           </h1>
-          <p className="text-gray-600 mt-2">
+
+          <div className="w-12 h-1 bg-orange-500 rounded-full mx-auto mt-3 mb-4" />
+
+          <p className="text-slate-600 text-sm sm:text-base">
             Be a part of RGUKT Ongole’s entrepreneurial ecosystem
           </p>
         </div>
 
-        {/* Form Card */}
+        {/* ===== Form Card ===== */}
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-2xl shadow-lg p-8"
+          className="bg-white rounded-2xl shadow-lg border border-slate-200
+                     p-6 sm:p-8 md:p-10 space-y-5"
         >
 
-          {/* Name */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Full Name</label>
-            <input
-              type="text"
+          {/* ===== Name & Email ===== */}
+          <div className="grid sm:grid-cols-2 gap-5">
+            <Input
+              label="Full Name"
               name="name"
-              required
+              placeholder="Enter your full name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="Enter your full name"
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+              required
             />
-          </div>
 
-          {/* Email */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Email</label>
-            <input
+            <Input
+              label="Email"
               type="email"
               name="email"
-              required
+              placeholder="example@email.com"
               value={formData.email}
               onChange={handleChange}
-              placeholder="example@email.com"
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+              required
             />
           </div>
 
-          {/* Phone */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Phone Number</label>
-            <input
-              type="tel"
+          {/* ===== Phone & Department ===== */}
+          <div className="grid sm:grid-cols-2 gap-5">
+            <Input
+              label="Phone Number"
               name="phone"
-              required
+              placeholder="10-digit mobile number"
               value={formData.phone}
               onChange={handleChange}
-              placeholder="10-digit mobile number"
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+              required
             />
-          </div>
 
-          {/* Department */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
-              Department / Branch
-            </label>
-            <input
-              type="text"
+            <Input
+              label="Department / Branch"
               name="department"
+              placeholder="CSE, ECE, Mechanical, etc."
               value={formData.department}
               onChange={handleChange}
-              placeholder="CSE, ECE, Mechanical, etc."
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
           </div>
 
-          {/* Year */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
-              Year of Study
-            </label>
-            <select
+          {/* ===== Year & Team ===== */}
+          <div className="grid sm:grid-cols-2 gap-5">
+            <Select
+              label="Year of Study"
               name="year"
               value={formData.year}
               onChange={handleChange}
               required
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
-            >
-              <option value="">Select year</option>
-              <option>1st Year</option>
-              <option>2nd Year</option>
-              <option>3rd Year</option>
-              <option>4th Year</option>
-            </select>
-          </div>
+              options={[
+                "1st Year",
+                "2nd Year",
+                "3rd Year",
+                "4th Year",
+              ]}
+            />
 
-          {/* Team */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
-              Preferred Team
-            </label>
-            <select
+            <Select
+              label="Preferred Team"
               name="team"
               value={formData.team}
               onChange={handleChange}
               required
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
-            >
-              <option value="">Select a team</option>
-              <option>Core Team</option>
-              <option>Technical Team</option>
-              <option>Marketing & Outreach</option>
-              <option>Events & Operations</option>
-              <option>Design & Media</option>
-            </select>
-          </div>
-
-          {/* Motivation */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
-              Why do you want to join E-Cell?
-            </label>
-            <textarea
-              name="motivation"
-              rows="4"
-              required
-              value={formData.motivation}
-              onChange={handleChange}
-              placeholder="Tell us about your interest in entrepreneurship..."
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+              options={[
+                "Core Team",
+                "Technical Team",
+                "Marketing & Outreach",
+                "Events & Operations",
+                "Design & Media",
+              ]}
             />
           </div>
 
-          {/* Experience */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium mb-1">
-              Prior Experience (optional)
-            </label>
-            <textarea
-              name="experience"
-              rows="3"
-              value={formData.experience}
-              onChange={handleChange}
-              placeholder="Clubs, startups, projects, internships, etc."
-              className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
-            />
-          </div>
+          {/* ===== Motivation ===== */}
+          <Textarea
+            label="Why do you want to join E-Cell?"
+            name="motivation"
+            rows={4}
+            placeholder="Tell us about your interest in entrepreneurship..."
+            value={formData.motivation}
+            onChange={handleChange}
+            required
+          />
 
-          {/* Submit */}
+          {/* ===== Experience ===== */}
+          <Textarea
+            label="Prior Experience (optional)"
+            name="experience"
+            rows={3}
+            placeholder="Clubs, startups, projects, internships, etc."
+            value={formData.experience}
+            onChange={handleChange}
+          />
+
+          {/* ===== Submit Button ===== */}
           <button
             type="submit"
-            className="w-full bg-[#ff7a00] text-white py-3 rounded-full font-semibold
-                       hover:bg-orange-600 transition"
+            className="w-full bg-orange-500 text-white py-3 rounded-full
+                       font-semibold text-sm sm:text-base
+                       hover:bg-orange-600 active:scale-[0.98]
+                       transition duration-200"
           >
             Submit Application
           </button>
         </form>
       </div>
+    </section>
+  );
+}
+
+/* ===== Reusable Inputs ===== */
+
+function Input({ label, type = "text", ...props }) {
+  return (
+    <div>
+      <label className="block text-xs sm:text-sm font-medium mb-1 text-slate-700">
+        {label}
+      </label>
+      <input
+        type={type}
+        {...props}
+        className="w-full rounded-lg border border-slate-300
+                   px-4 py-2.5 text-sm
+                   focus:outline-none focus:ring-2 focus:ring-orange-400"
+      />
     </div>
   );
-};
+}
 
-export default Register;
+function Select({ label, options, ...props }) {
+  return (
+    <div>
+      <label className="block text-xs sm:text-sm font-medium mb-1 text-slate-700">
+        {label}
+      </label>
+      <select
+        {...props}
+        className="w-full rounded-lg border border-slate-300
+                   px-4 py-2.5 text-sm
+                   focus:outline-none focus:ring-2 focus:ring-orange-400"
+      >
+        <option value="">Select</option>
+        {options.map((opt, i) => (
+          <option key={i}>{opt}</option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+function Textarea({ label, ...props }) {
+  return (
+    <div>
+      <label className="block text-xs sm:text-sm font-medium mb-1 text-slate-700">
+        {label}
+      </label>
+      <textarea
+        {...props}
+        className="w-full rounded-lg border border-slate-300
+                   px-4 py-2.5 text-sm resize-none
+                   focus:outline-none focus:ring-2 focus:ring-orange-400"
+      />
+    </div>
+  );
+}
