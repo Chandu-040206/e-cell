@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Trash2 } from "lucide-react";
+import { Trash2, Check } from "lucide-react";
 
 /* Images */
 import image1 from "../utils/images/1.jpeg";
@@ -120,18 +120,21 @@ export default function Events() {
     e.preventDefault();
     const form = e.target;
 
+    const file = form.image.files[0];
+
     const newEvent = {
       id: Date.now(),
       title: form.title.value,
       date: form.date.value,
       desc: form.desc.value,
-      image: form.image.value,
+      image: file ? URL.createObjectURL(file) : "",
     };
 
     setUpcomingEvents([...upcomingEvents, newEvent]);
     setShowAddEvent(false);
     form.reset();
   };
+
 
   /* DELETE */
   const deleteUpcomingEvent = (id) =>
@@ -152,11 +155,10 @@ export default function Events() {
     <section className="bg-slate-50 pt-8 pb-20">
       {/* HEADER */}
       <div
-        className={`max-w-7xl mx-auto px-6 mb-10 ${
-          isAdmin
+        className={`max-w-7xl mx-auto px-6 mb-10 ${isAdmin
             ? "flex justify-between items-center"
             : "text-center"
-        }`}
+          }`}
       >
         <div className={`${!isAdmin ? "mx-auto" : ""}`}>
           <h1 className="text-4xl font-bold text-blue-900">
@@ -192,10 +194,9 @@ export default function Events() {
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`px-6 py-2 mx-2 rounded-full font-semibold
-              ${
-                activeTab === tab
-                  ? "bg-blue-900 text-white"
-                  : "bg-white text-slate-700"
+              ${activeTab === tab
+                ? "bg-blue-900 text-white"
+                : "bg-white text-slate-700"
               }`}
           >
             {tab === "upcoming" ? "Upcoming Events" : "Past Events"}
@@ -250,13 +251,27 @@ function EventCard({ event, isAdmin, type, onDelete, onAction }) {
   return (
     <div className="bg-white rounded-2xl shadow hover:shadow-xl relative overflow-hidden">
       {isAdmin && (
-        <button
-          onClick={onDelete}
-          className="absolute top-3 right-3 bg-white p-2 rounded shadow"
-        >
-          <Trash2 className="w-5 h-5 text-red-500" />
-        </button>
+        <div className="absolute top-3 right-3 flex gap-2">
+
+          {/* Tick button */}
+          <button
+            // onClick={onTick} // your tick handler
+            className="bg-white p-2 rounded shadow"
+          >
+            <Check className="w-5 h-5 text-green-500" />
+          </button>
+
+          {/* Trash button */}
+          <button
+            onClick={onDelete}
+            className="bg-white p-2 rounded shadow"
+          >
+            <Trash2 className="w-5 h-5 text-red-500" />
+          </button>
+
+        </div>
       )}
+
 
       <img
         src={event.image || event.images?.[0]}
@@ -273,10 +288,9 @@ function EventCard({ event, isAdmin, type, onDelete, onAction }) {
           <button
             onClick={onAction}
             className={`mt-4 px-5 py-2 rounded-full text-white
-              ${
-                type === "upcoming"
-                  ? "bg-blue-900"
-                  : "bg-orange-500"
+              ${type === "upcoming"
+                ? "bg-blue-900"
+                : "bg-orange-500"
               }`}
           >
             {type === "upcoming" ? "Register" : "Learn More"}
@@ -358,12 +372,41 @@ function ModalAddEvent({ close, onSubmit }) {
         className="bg-white rounded-2xl p-6 w-full max-w-md space-y-4"
       >
         <h2 className="text-xl font-bold">Add Event</h2>
-        <input name="title" placeholder="Event Name" className="input" required />
-        <input name="date" type="date" className="input" required />
-        <input name="image" placeholder="Image URL" className="input" required />
-        <textarea name="desc" placeholder="Description" className="input" required />
+
+        <input
+          name="title"
+          placeholder="Event Name"
+          className="input"
+          required
+        />
+
+        <input
+          name="date"
+          type="date"
+          className="input"
+          required
+        />
+
+        <input
+          name="image"
+          type="file"
+          accept="image/*"
+          className="input"
+          required
+        />
+
+        <textarea
+          name="desc"
+          placeholder="Description"
+          className="input"
+          required
+        />
+
         <div className="flex justify-end gap-3">
-          <button type="button" onClick={close}>Cancel</button>
+          <button type="button" onClick={close}>
+            Cancel
+          </button>
+
           <button className="bg-orange-500 text-white px-4 py-2 rounded">
             Add
           </button>
@@ -373,6 +416,7 @@ function ModalAddEvent({ close, onSubmit }) {
   );
 }
 
+
 /* INPUT STYLE */
-const input =
-  "w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-900";
+// const input =
+//   "w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-900";
